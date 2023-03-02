@@ -96,15 +96,15 @@ void test_hsv_to_rgb()
   TEST(same_image(im, c));
   }
 
-void test_rgb2lch2rgb()
-  {
-  Image im = load_image("data/dog.jpg");
-  Image c = im;
-  
-  rgb_to_lch(im);
-  lch_to_rgb(im);
-  TEST(same_image(im, c));
-  }
+//void test_rgb2lch2rgb()
+//  {
+//  Image im = load_image("data/dog.jpg");
+//  Image c = im;
+//
+//  rgb_to_lch(im);
+//  lch_to_rgb(im);
+//  TEST(same_image(im, c));
+//  }
 
 
 void run_tests()

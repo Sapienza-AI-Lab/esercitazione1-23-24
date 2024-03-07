@@ -5,6 +5,22 @@
 
 using namespace std;
 
+/*
+ * This is an example of a simple test: the image data/dots.png has been created with an image editor that we trust and
+ * that allows for the exact coloring of single pixels. Most of the initial tests in this file are like this. The
+ * comparison, using an external image, des not check exactness in number representation, but closeness,taking into
+ * accontut numerical imprecision in the digital representation.
+ *
+ * Note 1: the test function uses "implementation" methods such as clamped_pixel, but it is named after the actual
+ * purpose of the method (i.e. get a pixel value). This could be misleading and suggests that you could refactor the
+ * image method to "hide" the clamp aspect into the function, or put it as an option selectable trough arguments.
+ *
+ * Note 2: the function tests clamped_pixel in a random fashion. This is useful, but it does not necessarily cover
+ * corner cases. For example, is it testing the access to pixels with negative coordinates? This inputs are possible,
+ * and they should have proper tests too.
+ *
+ * # TDD-HW0 #1 check invalid inputs. In particular this checks if the clamp functionality works effectively.
+ */
 void test_get_pixel()
   {
   Image im = load_image("data/dots.png");
@@ -20,6 +36,9 @@ void test_get_pixel()
   TEST(within_eps(1, im.clamped_pixel(7,8,2)));
   }
 
+  /*
+   * TDD_HW0 #2: refine this test according to the F.I.R.S.T. principles
+   */
 void test_set_pixel()
   {
   Image im = load_image("data/dots.png");

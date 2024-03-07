@@ -1,3 +1,7 @@
+/*
+ * Note to the students: to better understand this test utils, you could check these references:
+ * Standard predefined GCC macros: https://gcc.gnu.org/onlinedocs/cpp/Standard-Predefined-Macros.html
+ */
 #pragma once
 
 #include <vector>

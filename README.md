@@ -1,7 +1,7 @@
 ### Disclamer: This lab is originally based on the CSE 576 homework that you can find here: ###
 #### https://github.com/holynski/cse576_sp20_hw1 ####
 
-# Esercitazione 1 di AI-Lab #
+# Esercitazione 1 di AI-Lab A.A 2023/24 #
 
 ## Setup generale ##
 Questo è il setup da seguire per impostare il repo sulla vostra macchina personale. 
@@ -40,7 +40,9 @@ Per compilare manualmente:
     cmake ..
     make -j4
 
-### Esecuzione/Test ###
+### Esecuzione/Test (Test Suite) ###
+
+Adottando un approccio TDD, il nostro "main" è il programma che gira tutti i test che assicurano la correttezza (relativa) del codice. La test suite che usiamo è molto semplice e autoprodotta. Più avanti potremo introdurre una libreria di test per avere funzionalità più avanzate, ma al momento ci serve solo di capire il principio. 
 
 Ogni volta che fate dei cambiamenti al codice dovete compilare. Il programma da girare è 
 

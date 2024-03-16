@@ -5,8 +5,13 @@
 #include "utils.h"
 #include "image.h"
 
-int tests_total = 0;
-int tests_fail = 0;
+//int tests_total = 0;
+//int tests_fail = 0;
+int MyTest::tests_fail = 0;
+int MyTest::tests_total = 0;
+const int& tests_total = MyTest::tests_total;
+const int& tests_fail = MyTest::tests_fail;
+MyTest TEST;
 
 int same_image(const Image& a, const Image& b) { return a==b; }
 

@@ -9,6 +9,7 @@
 #include <chrono>
 #include <thread>
 #include <mutex>
+#include <source_location>
 
 using namespace std;
 /* The following macro is defined at compile time using the "C" code style, but it is really unsafe, since it
@@ -18,14 +19,31 @@ using namespace std;
  * TDD HW3 #1: refactor the code using templates and without changing the firm of the TEST macro (use functional
  * objects)
  */
-extern int tests_total;
-extern int tests_fail;
-#define TEST(EX) do {\
-  if(!(EX))fprintf(stderr, "Test %3d FAILED (%3d failed so far): [%20s] testing [%20s] in %20s, line %5d\n", tests_total++, tests_fail++,  __FUNCTION__, #EX, __FILE__, __LINE__); \
-  else     fprintf(stderr, "Test %3d PASSED (%3d failed so far): [%20s] testing [%20s] in %20s, line %5d\n", tests_total++, tests_fail  ,  __FUNCTION__, #EX, __FILE__, __LINE__); \
-  } while (0)
+//extern int tests_total;
+//extern int tests_fail;
+//#define TEST(EX) do {\
+//  if(!(EX))fprintf(stderr, "Test %3d FAILED (%3d failed so far): [%20s] testing [%20s] in %20s, line %5d\n", tests_total++, tests_fail++,  __FUNCTION__, #EX, __FILE__, __LINE__); \
+//  else     fprintf(stderr, "Test %3d PASSED (%3d failed so far): [%20s] testing [%20s] in %20s, line %5d\n", tests_total++, tests_fail  ,  __FUNCTION__, #EX, __FILE__, __LINE__); \
+//  } while (0)
 
+struct MyTest {
+    static int tests_total;
+    static int tests_fail;
 
+public:
+    inline void operator()(bool expr, source_location fun = source_location::current()){
+        if(!expr) {
+            fprintf(stderr, "Test %3d FAILED (%3d failed so far): on function [%20s] in %20s, line %5d\n", tests_total++, tests_fail++,  fun.function_name(), fun.file_name(), fun.line());
+        }
+        else {
+            fprintf(stderr, "Test %3d FAILED (%3d failed so far): on function [%20s] in [%20s, line %5d\n", tests_total++, tests_fail, fun.function_name(), fun.file_name(), fun.line());
+        }
+    }
+};
+
+extern const int& tests_total;
+extern const int& tests_fail;
+extern MyTest TEST;
 
 constexpr float TEST_EPS=0.005;
 inline bool within_eps(float a, float b) { return a-TEST_EPS<b && b<a+TEST_EPS; }

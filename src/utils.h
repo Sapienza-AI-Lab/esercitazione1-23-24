@@ -26,6 +26,11 @@ using namespace std;
 //  else     fprintf(stderr, "Test %3d PASSED (%3d failed so far): [%20s] testing [%20s] in %20s, line %5d\n", tests_total++, tests_fail  ,  __FUNCTION__, #EX, __FILE__, __LINE__); \
 //  } while (0)
 
+/*
+ * The following solution is designed to do not modify the test0.cpp file, but only the utils.h and utils.cpp.
+ * Removing this constraint would allow for a better solution, cleaner and easy to understand. In this case, we are
+ * trying to mimic the C macro function that was defined before (see above).
+ */
 struct MyTest {
     static int tests_total;
     static int tests_fail;
@@ -33,17 +38,21 @@ struct MyTest {
 public:
     inline void operator()(bool expr, source_location fun = source_location::current()){
         if(!expr) {
-            fprintf(stderr, "Test %3d FAILED (%3d failed so far): on function [%20s] in %20s, line %5d\n", tests_total++, tests_fail++,  fun.function_name(), fun.file_name(), fun.line());
+            fprintf(stderr, "Test %3d FAILED (%3d failed so far): on function [%20s] in %20s, line %5d\n",
+                    tests_total++, tests_fail++,  fun.function_name(), fun.file_name(), fun.line());
         }
         else {
-            fprintf(stderr, "Test %3d FAILED (%3d failed so far): on function [%20s] in [%20s, line %5d\n", tests_total++, tests_fail, fun.function_name(), fun.file_name(), fun.line());
+            fprintf(stderr, "Test %3d FAILED (%3d failed so far): on function [%20s] in [%20s, line %5d\n",
+                    tests_total++, tests_fail, fun.function_name(), fun.file_name(), fun.line());
         }
     }
 };
 
 extern const int& tests_total;
 extern const int& tests_fail;
-extern MyTest TEST;
+extern MyTest TEST; //the actual funciton object has to be declared global to work as the C macro
+
+
 
 constexpr float TEST_EPS=0.005;
 inline bool within_eps(float a, float b) { return a-TEST_EPS<b && b<a+TEST_EPS; }

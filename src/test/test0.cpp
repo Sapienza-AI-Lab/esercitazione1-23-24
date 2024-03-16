@@ -19,7 +19,9 @@ using namespace std;
  * corner cases. For example, is it testing the access to pixels with negative coordinates? This inputs are possible,
  * and they should have proper tests too.
  *
- * # TDD-HW0 #1 check invalid inputs. In particular this checks if the clamp functionality works effectively.
+ * # TDD-HW0 #1 modify non-failing tests: some of the tests pass even when the tested function is not implemented yet.
+ * This behaviour does not follow the basic principles of TDD. Modify the tests to make them more meaningful.
+ * # TDD-HW0 #2 check invalid inputs. In particular this checks if the clamp functionality works effectively.
  */
 void test_get_pixel()
   {
@@ -36,9 +38,7 @@ void test_get_pixel()
   TEST(within_eps(1, im.clamped_pixel(7,8,2)));
   }
 
-  /*
-   * TDD_HW0 #2: refine this test according to the F.I.R.S.T. principles
-   */
+
 void test_set_pixel()
   {
   Image im = load_image("data/dots.png");
@@ -57,6 +57,17 @@ void test_set_pixel()
   // Test images are same
   TEST(same_image(im, d));
   }
+
+/*
+ * The following tests load an image from disk, perform some operation (applying the tested function),
+ * then check if the transformed image is equal to a reference image. This approach is ok-ish, but, given the
+ * possible floating point approximations that could happen in the process of saving and loading back an image, the
+ * check is done using the function "within_eps". Another approach could be to generate an artificial image, directly
+ * assigning the pixel values to each channel, perform the transformations, then check if the transformed image pixels
+ * are coherent with the mathematical definition of the operation, without approximations.
+ *
+ * TDD_HW1 #1: add deterministic tests cases to the following test functions
+ */
 
 void test_grayscale()
   {

@@ -11,7 +11,13 @@
 #include <mutex>
 
 using namespace std;
-
+/* The following macro is defined at compile time using the "C" code style, but it is really unsafe, since it
+ * does not allow for type checking. Your task is to modify the code using C++ compile-time features (i.e. templates)
+ * to obtain a similar result, but with type check and other controls
+ *
+ * TDD HW3 #1: refactor the code using templates and without changing the firm of the TEST macro (use functional
+ * objects)
+ */
 extern int tests_total;
 extern int tests_fail;
 #define TEST(EX) do {\

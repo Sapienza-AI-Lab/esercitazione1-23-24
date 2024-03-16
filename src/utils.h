@@ -42,7 +42,7 @@ public:
                     tests_total++, tests_fail++,  fun.function_name(), fun.file_name(), fun.line());
         }
         else {
-            fprintf(stderr, "Test %3d FAILED (%3d failed so far): on function [%20s] in [%20s, line %5d\n",
+            fprintf(stderr, "Test %3d PASSED (%3d failed so far): on function [%20s] in [%20s, line %5d\n",
                     tests_total++, tests_fail, fun.function_name(), fun.file_name(), fun.line());
         }
     }

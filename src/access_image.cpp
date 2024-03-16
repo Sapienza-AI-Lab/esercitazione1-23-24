@@ -31,6 +31,8 @@ float get_clamped_pixel(const Image &im, int x, int y, int ch) {
     if (ch >= im.c) ch = im.c - 1;
 
     return im.data[pixel_address(im, x, y, ch)];
+    //NOT_IMPLEMENTED();
+    //return 0.0;
 }
 
 // TODO: modify for unexpected values

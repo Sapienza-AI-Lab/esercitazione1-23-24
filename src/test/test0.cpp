@@ -9,7 +9,7 @@ using namespace std;
  * This is an example of a simple test: the image data/dots.png has been created with an image editor that we trust and
  * that allows for the exact coloring of single pixels. Most of the initial tests in this file are like this. The
  * comparison, using an external image, des not check exactness in number representation, but closeness,taking into
- * accontut numerical imprecision in the digital representation.
+ * account numerical imprecision in the digital representation.
  *
  * Note 1: the test function uses "implementation" methods such as clamped_pixel, but it is named after the actual
  * purpose of the method (i.e. get a pixel value). This could be misleading and suggests that you could refactor the
@@ -22,6 +22,7 @@ using namespace std;
  * # TDD-HW0 #1 modify non-failing tests: some of the tests pass even when the tested function is not implemented yet.
  * This behaviour does not follow the basic principles of TDD. Modify the tests to make them more meaningful.
  * # TDD-HW0 #2 check invalid inputs. In particular this checks if the clamp functionality works effectively.
+ * # TDD-HW0 #3: divide the test function in smaller homogeneous tests.
  */
 void test_get_pixel()
   {

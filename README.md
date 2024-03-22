@@ -410,7 +410,15 @@ Il vostro compito è rendere gli altri test più deterministici, ove possibile, 
 
 ### TDD HW2
 
-TBD
+The general design principles underlying the TDD are sometimes referred as F.I.R.S.T. principles:
+
+1. **Fast**: run (subset of) tests quickly (since you'll be running them all the time)
+2. **Independent**: no tests depend on others, so can run any subset in any order
+3. **Repeatable**: run N times, get same result (to help isolate bugs and enable automation)
+4. **Self-checking**: test can automatically detect if passed (no human checking of output)
+5. **Timely**: written about the same time as code under test (with TDD, written first!)
+
+Your task is to revise the test suite according to these principles, however this is a loose indication. Use your understanding and motivate your solutions. 
 
 ### TDD HW3
 

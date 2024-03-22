@@ -10,6 +10,7 @@ using namespace std;
 // HW0 #3
 // const Image& im: input image
 // return the corresponding grayscale image
+// HW0 #3.1 optimize the code
 Image rgb_to_grayscale(const Image &im) {
     assert(im.c == 3); // only accept RGB images
     Image gray(im.w,im.h,1); // create a new grayscale image (note: 1 channel)

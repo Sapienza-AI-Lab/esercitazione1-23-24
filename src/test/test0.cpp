@@ -5,6 +5,25 @@
 
 using namespace std;
 
+/*
+ * This is an example of a simple test: the image data/dots.png has been created with an image editor that we trust and
+ * that allows for the exact coloring of single pixels. Most of the initial tests in this file are like this. The
+ * comparison, using an external image, des not check exactness in number representation, but closeness,taking into
+ * account numerical imprecision in the digital representation.
+ *
+ * Note 1: the test function uses "implementation" methods such as clamped_pixel, but it is named after the actual
+ * purpose of the method (i.e. get a pixel value). This could be misleading and suggests that you could refactor the
+ * image method to "hide" the clamp aspect into the function, or put it as an option selectable trough arguments.
+ *
+ * Note 2: the function tests clamped_pixel in a random fashion. This is useful, but it does not necessarily cover
+ * corner cases. For example, is it testing the access to pixels with negative coordinates? This inputs are possible,
+ * and they should have proper tests too.
+ *
+ * # TDD-HW0 #1 modify non-failing tests: some of the tests pass even when the tested function is not implemented yet.
+ * This behaviour does not follow the basic principles of TDD. Modify the tests to make them more meaningful.
+ * # TDD-HW0 #2 check invalid inputs. In particular this checks if the clamp functionality works effectively.
+ * # TDD-HW0 #3: divide the test function in smaller homogeneous tests.
+ */
 void test_get_pixel()
   {
   Image im = load_image("data/dots.png");
@@ -19,6 +38,7 @@ void test_get_pixel()
   TEST(within_eps(0, im.clamped_pixel(7,8,1)));
   TEST(within_eps(1, im.clamped_pixel(7,8,2)));
   }
+
 
 void test_set_pixel()
   {
@@ -38,6 +58,17 @@ void test_set_pixel()
   // Test images are same
   TEST(same_image(im, d));
   }
+
+/*
+ * The following tests load an image from disk, perform some operation (applying the tested function),
+ * then check if the transformed image is equal to a reference image. This approach is ok-ish, but, given the
+ * possible floating point approximations that could happen in the process of saving and loading back an image, the
+ * check is done using the function "within_eps". Another approach could be to generate an artificial image, directly
+ * assigning the pixel values to each channel, perform the transformations, then check if the transformed image pixels
+ * are coherent with the mathematical definition of the operation, without approximations.
+ *
+ * TDD_HW1 #1: add deterministic tests cases to the following test functions
+ */
 
 void test_grayscale()
   {

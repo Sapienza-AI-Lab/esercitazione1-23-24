@@ -27,7 +27,7 @@ float get_clamped_pixel(const Image &im, int x, int y, int ch) {
     return 0.0;
 }
 
-
+// TODO: modify for unexpected values
 // HW0 #1
 // Image& im: input image
 // int x,y,ch: pixel coordinates and channel of interest
@@ -42,12 +42,14 @@ void set_pixel(Image &im, int x, int y, int c, float value) {
 // Copies an image
 // Image& to: destination image
 // const Image& from: source image
+// HW #2.1: optimize the code with memcopy or other tricks, and check if you can speed it up
+// (e.g. https://stackoverflow.com/questions/48993833/copy-2d-array-using-memcpy)
 void copy_image(Image &to, const Image &from) {
     // allocating data for the new image
     to.data = (float *) calloc(from.w * from.h * from.c, sizeof(float));
     to.c = from.c;
     // TODO: populate the remaining fields in 'to' and copy the data
-
+    
     // You might want to check how 'memcpy' function works
     NOT_IMPLEMENTED();
 }

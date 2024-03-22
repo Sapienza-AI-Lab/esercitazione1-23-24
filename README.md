@@ -1,7 +1,7 @@
 ### Disclamer: This lab is originally based on the CSE 576 homework that you can find here: ###
 #### https://github.com/holynski/cse576_sp20_hw1 ####
 
-# Esercitazione 1 di AI-Lab #
+# Esercitazione 1 di AI-Lab A.A 2023/24 #
 
 ## Setup generale ##
 Questo è il setup da seguire per impostare il repo sulla vostra macchina personale. 
@@ -40,7 +40,9 @@ Per compilare manualmente:
     cmake ..
     make -j4
 
-### Esecuzione/Test ###
+### Esecuzione/Test (Test Suite) ###
+
+Adottando un approccio TDD, il nostro "main" è il programma che gira tutti i test che assicurano la correttezza (relativa) del codice. La test suite che usiamo è molto semplice e autoprodotta. Più avanti potremo introdurre una libreria di test per avere funzionalità più avanzate, ma al momento ci serve solo di capire il principio. 
 
 Ogni volta che fate dei cambiamenti al codice dovete compilare. Il programma da girare è 
 
@@ -388,3 +390,30 @@ migliore:
 [1]: https://en.wikipedia.org/wiki/SRGB#The_sRGB_transfer_function_("gamma")
 [2]: https://en.wikipedia.org/wiki/Luma_(video)
 
+## Esercizio di "Test Driven Development"
+Questa serie di esercizi è meno sistematica di quella precedente, nel senso che potrebbe avere diverse soluzioni, a seconda delle vostre scelte. L'idea generale è quella di migliorare le funzionaltà di test di questo codice, usando i principi del TDD. I vari esercizi sono descritti nel codice, nei file "test0.cpp" e "utils.h", e qui di seguito.
+
+### TDD HW0
+
+Nei primi test che abbiamo visto, come test_get_pixel, alcuni test passavano automaticamente anche con una NOT_IMPLEMENTED funcion. Questo è accettabile, ma non ideale. Inoltre, i test dei pixel non erano sistematici per due motivi:
+1. Solo alcune posizioni dell'immagine di test erano testate, con un campione che sembra casuale, ma che, essendo creato a mano, potrebbe nascondere delle sviste.
+2. Il riferimento di colore è implicito nelle macro TEST, preso dai colori dell'immagine di test dots.png, ma potrebbe essere reso più esplicito e chiaro.
+3. I test di pixel validi e invalidi sono nella stessa funzione, ma sarebbe meglio separarli, per permettere un debug più specifico.
+
+Il vostro compito è fare un refactoring dei test, in modo che testino tutti i pixel dell'immagine dots.png e il padding in maniera sistematica. Utilizzate le funzionalità di C++ che conoscete per rendere il codice più chiaro ed elegante. 
+
+### TDD HW1
+
+I seguenti test caricano un'immagine da disco, eseguono un'operazione (applicando la funzione testata) e poi verificano se l'immagine trasformata è uguale a un'immagine di riferimento. Questo approccio è accettabile, ma, date le possibili approssimazioni in virgola mobile che potrebbero avvenire nel processo di salvataggio e ricaricamento di un'immagine, il controllo è effettuato utilizzando la funzione "within_eps". Un altro approccio potrebbe essere quello di generare un'immagine artificiale, assegnando direttamente i valori dei pixel a ogni canale, eseguire le trasformazioni, e poi verificare se i pixel dell'immagine trasformata sono coerenti con la definizione matematica dell'operazione, senza approssimazioni.
+
+Il vostro compito è rendere gli altri test più deterministici, ove possibile, senza dover ricorrere alla funzione within_eps. 
+
+### TDD HW2
+
+TBD
+
+### TDD HW3
+
+La funzione di test è in realtà una macro definita a compile time. È scritta bene, allo stesso tempo l'utilizzo delle macro permette di evitare tutti i controlli sui tipi che il compilatore farebbe normalmente. È possibile creare una funzionalità simile utilizzando le caratterictiche del linguaggio C++ e allo stesso tempo mantenere il controllo di tipo.
+
+Il vostro compito è quello di utilizzare le funzionalità di "template" del C++ per modificare il codice contenuto in utils.h e utils.cpp, in modo che sia più sicuro, ma anche retro-compatibile con i test già scritti (e.g. non dovete modificare il file test0.cpp).

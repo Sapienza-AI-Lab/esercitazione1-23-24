@@ -1,25 +1,69 @@
 #include "../image.h"
 #include "../utils.h"
 
+#include <stdio.h>
 #include <string>
 #include <cstdint>
 #include <iostream>
+#include <array>
+#include <vector>
+#include <list>
+#include <utility>
+#include <ranges>
 
 using namespace std;
 
+//TODO inserire un metodo di output formattato
 union RGB_color {
     struct {
         std::float_t r, g, b, a;
     };
     std::float_t color[4];
 
-    RGB_color& operator/=(float divisor) {
+    RGB_color &operator/=(float divisor) {
         this->r /= divisor;
         this->g /= divisor;
         this->b /= divisor;
         return *this;
     }
+
 };
+
+// classical stringstream implementation
+//std::ostream& operator<<(std::ostream& os, const RGB_color& color)
+//{
+//    os << "RGB color: #" << hex << uppercase << (int)color.r << (int)color.g << (int)color.b << endl;
+//    return os;
+//}
+
+// classical sprintf (should be faster than stream) implementation
+std::ostream &operator<<(std::ostream &os, const RGB_color &color) {
+//    os << "RGB color: #" << hex << uppercase << (int)color.r << (int)color.g << (int)color.b << endl;
+    std::string out(100, '\0');
+    sprintf(out.data(), "RGB color: #%02X%02X%02X\n", (int) color.r, (int) color.g, (int) color.b);
+    return os << out;
+}
+
+// new c++20 implementation with <format>: should be faster and more readable
+// TODO: with gcc < 13 is not supported
+
+// this should be a FIXTURE
+array<RGB_color, 8> setup_rgb_reference() {
+    array<RGB_color, 8> test_color_pattern{{{0x00, 0x00, 0x00, 0xFF},  // black
+                                            {0xFF, 0xFF, 0xFF, 0xFF},  // white
+                                            {0xFF, 0x00, 0x00, 0xFF},  // red
+                                            {0xFF, 0xFF, 0x00, 0xFF},  // yellow
+                                            {0x00, 0xFF, 0x00, 0xFF},  // green
+                                            {0x00, 0xFF, 0xFF, 0xFF},  // cyan
+                                            {0x00, 0x00, 0xFF, 0xFF},  // blue
+                                            {0xFF, 0x00, 0xFF, 0xFF}}}; // magenta
+    for (auto color_it = test_color_pattern.begin(); color_it < test_color_pattern.end(); ++color_it) {
+        *color_it /= 255;
+    }
+    // the following does not work, uses a temporary object
+//    for(auto color : test_color_pattern) color /= 255;
+    return test_color_pattern;
+}
 
 /*
  * This is an example of a simple test: the image data/dots.png has been created with an image editor that we trust and
@@ -39,41 +83,73 @@ union RGB_color {
  * This behaviour does not follow the basic principles of TDD. Modify the tests to make them more meaningful.
  * # TDD-HW0 #2 check invalid inputs. In particular this checks if the clamp functionality works effectively.
  */
-void test_get_pixel() {
+void test_get_pixel_valid() {
     Image im = load_image("data/dots.png");
-    // Test within image
-//    TEST(within_eps(0, im.clamped_pixel(0, 0, 0)));
-//    TEST(within_eps(1, im.clamped_pixel(1, 0, 1)));
-//    TEST(within_eps(0, im.clamped_pixel(2, 0, 1)));
-//
-//    // Test padding
-//    TEST(within_eps(1, im.clamped_pixel(0, 3, 1)));
-//    TEST(within_eps(1, im.clamped_pixel(7, 8, 0)));
-//    TEST(within_eps(0, im.clamped_pixel(7, 8, 1)));
-//    TEST(within_eps(1, im.clamped_pixel(7, 8, 2)));
 
     /* A systematic test */
-    // test colors
-    RGB_color color[] = {{0x00, 0x00, 0x00, 0xFF},  // black
-                         {0xFF, 0xFF, 0xFF, 0xFF},  // white
-                         {0xFF, 0x00, 0x00, 0xFF},  // red
-                         {0xFF, 0xFF, 0x00, 0xFF},  // yellow
-                         {0x00, 0xFF, 0x00, 0xFF},  // green
-                         {0x00, 0xFF, 0xFF, 0xFF},  // cyan
-                         {0x00, 0x00, 0xFF, 0xFF},  // blue
-                         {0xFF, 0x00, 0xFF, 0xFF}}; // magenta
-    for (int i=0; i<8; i++) color[i] /= 255;
+    // Test within image:
+    // some values used in this test
+    int const TEST_SIZE = 8;
+    int w = im.w;
+    int h = im.h;
+    int cs = im.w * im.h;
+    auto test_color_pattern = setup_rgb_reference();
 
-    for(int x=0; x < im.w; ++x) {
-        for(int y=0; y < im.h; ++y){
-            TEST(color[4*y+x].r == im.clamped_pixel(x, y, 0));
-            TEST(color[4*y+x].g == im.clamped_pixel(x, y, 1));
-            TEST(color[4*y+x].b == im.clamped_pixel(x, y, 2));
+    // to avoid a mess of per pixel tests, collect the results in auxiliary variables
+    bool test_passed = true;
+    bool pixel_tests_results[3 * TEST_SIZE];
+    for (int x = 0; x < w; ++x) {
+        for (int y = 0; y < h; ++y) {
+            for (int c = 0; c < 3; ++c) {
+                pixel_tests_results[y * w + x + c * cs] =
+                        test_color_pattern[y * w + x].color[c] == im.clamped_pixel(x, y, c);
+                test_passed &= pixel_tests_results[y * w + x + c * cs];
+            }
         }
+    }
+    TEST(test_passed);
+    if (!test_passed) {
+        for (int i = 0; i < TEST_SIZE; ++i)
+            cerr << "test_get_pixel test at (x,y)=(" << i % w << "," << i / w << ") is " << pixel_tests_results[i]
+                 << endl;
     }
 }
 
+void test_get_pixel_invalid() {
+    /*
+        Old tests:
+        TEST(within_eps(1, im.clamped_pixel(0, 3, 1)));
+        TEST(within_eps(1, im.clamped_pixel(7, 8, 0)));
+        TEST(within_eps(0, im.clamped_pixel(7, 8, 1)));
+        TEST(within_eps(1, im.clamped_pixel(7, 8, 2)));
+    */
+    // Test padding
+    Image im = load_image("data/dots.png");
+    int w = im.w;
+    int h = im.h;
+    auto test_color_pattern = setup_rgb_reference();
 
+    bool test_passed = true;
+    bool pixel_tests_results[4];
+    using Pnt = std::pair<int, int>;
+    array values_request{Pnt{-1, -1}, Pnt{-1, h}, Pnt{w, -1}, Pnt{w, h}};
+    array im_angles{Pnt{0, 0}, Pnt{0, h - 1}, Pnt{w - 1, 0}, Pnt{w - 1, h - 1}};
+    test_passed = true;
+    for (int i = 0; i < 4; ++i) {
+        for (int c = 0; c < 3; ++c) {
+            auto xr = values_request[i].first;
+            auto yr = values_request[i].second;
+            auto xt = im_angles[i].first;
+            auto yt = im_angles[i].second;
+            pixel_tests_results[i] = test_color_pattern[yt * w + xt].color[c] == im.clamped_pixel(xr, yr, c);
+            test_passed &= pixel_tests_results[i];
+        }
+    }
+    TEST(test_passed);
+}
+
+// This test is already systematic, since compares a given input image with
+// one that is created with the tested function pixel by pixel
 void test_set_pixel() {
     Image im = load_image("data/dots.png");
     Image d(4, 2, 3);
@@ -182,7 +258,8 @@ void test_hsv_to_rgb() {
 
 
 void run_tests() {
-    test_get_pixel();
+    test_get_pixel_valid();
+    test_get_pixel_invalid();
 //    test_set_pixel();
 //    test_copy();
 //    test_shift();

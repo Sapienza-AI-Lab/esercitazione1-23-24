@@ -1,8 +1,8 @@
 cmake_minimum_required(VERSION 2.8)
 
-project(cse576-2020sp-HW1)
+project(esercitazione1_23-24)
 
-set(CMAKE_CXX_FLAGS "-fdiagnostics-color=always -std=c++11 -pthread -Og -g -march=native -fPIC")
+set(CMAKE_CXX_FLAGS "-fdiagnostics-color=always -std=c++2b -pthread -Og -g -march=native -fPIC")
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/)
 
